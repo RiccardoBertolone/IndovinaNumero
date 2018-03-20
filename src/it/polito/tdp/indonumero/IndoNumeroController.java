@@ -9,13 +9,7 @@ import javafx.scene.layout.HBox;
 
 public class IndoNumeroController {
 	
-	private int NMAX = 100;
-	private int TMAX = 7;
-	
-	private int segreto;
-	private int tentativi;
-	
-	private boolean inGame = false;
+	private Model model;
 
     @FXML
     private Button btnNuova;
@@ -37,20 +31,17 @@ public class IndoNumeroController {
 
     @FXML
     void handleNuova(ActionEvent event) {
-
-    	this.segreto = (int) (Math.random()*NMAX+1);
     	
-    	this.tentativi=0;
-    	this.inGame=true;
-    	
+    	model.newGame();
+   	
     	btnNuova.setDisable(true);
     	boxGioco.setDisable(false);
-    	txtCurr.setText(this.tentativi+"");
-    	txtMax.setText(this.TMAX+"");
+    	txtCurr.setText(model.getTentativi()+"");
+    	txtMax.setText(model.getTMAX()+"");
     	txtLog.clear();
     	txtTentativo.clear();
     	
-    	txtLog.setText("Indovina un numero tra 1 e "+NMAX+"\n");
+    	txtLog.setText("Indovina un numero tra 1 e "+model.getNMAX()+"\n");
     	
     }
 
@@ -66,24 +57,24 @@ public class IndoNumeroController {
     	
     	try {
     	int num = Integer.parseInt(numS);
-    	if (num == this.segreto) {
+    	if (num == model.getSegreto()) {
     		txtLog.appendText("Hai indovinato!\n");
     		btnNuova.setDisable(false);
     		boxGioco.setDisable(true);
-    		this.inGame=false;
+    		model.setInGame(false);
 
     	}
     	else {
-    		this.tentativi++;
-    		txtCurr.setText(this.tentativi+"");
-    		if (this.tentativi==this.TMAX) {
-    			txtLog.appendText("Hai perso! Il numero era: "+this.segreto+"\n");
+    		model.setTentativi(model.getTentativi()+1);
+    		txtCurr.setText(model.getTentativi()+"");
+    		if (model.getTentativi()==model.getTMAX()) {
+    			txtLog.appendText("Hai perso! Il numero era: "+model.getSegreto()+"\n");
     			btnNuova.setDisable(false);
         		boxGioco.setDisable(true);
-        		this.inGame=false;
+        		model.setInGame(false);
     		}
     		else {
-    			if (num<segreto) {
+    			if (num<model.getSegreto()) {
     				txtLog.appendText("Troppo basso\n");
     			}
     			else {
@@ -96,5 +87,11 @@ public class IndoNumeroController {
     		return;
     	}
     }
+
+	public void setModel(Model model) {
+		this.model = model;
+	}
+    
+    
 
 }
